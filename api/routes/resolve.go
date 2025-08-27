@@ -27,7 +27,7 @@ func ResolveURL(c *gin.Context) {
 	rInr := database.CreateClient(1)
 	defer rInr.Close()
 
-	_ = rInr.Incr(context.Background(), "counter")
+	_ = rInr.Incr(context.Background(), url)
 
 	c.Redirect(301, result)
 }

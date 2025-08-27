@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  api:
+    build: api
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    environment:
+      - DB_ADDR=db:6379
+
+  db:
+    build: db
+    volumes:
+      - .data:/data

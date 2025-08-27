@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+	"net/http"
 	"os"
 
 	"github.com/gin-gonic/gin"
@@ -9,6 +11,9 @@ import (
 )
 
 func setupRoutes(c *gin.Engine) {
+	c.GET("/health", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{"message": "health ok"})
+	})
 	c.GET("/:url", routes.ResolveURL)
 	c.POST("/api/v1", routes.ShortenURL)
 }
@@ -16,11 +21,17 @@ func setupRoutes(c *gin.Engine) {
 func main() {
 	err := godotenv.Load(".env")
 	if err != nil {
-		panic(err.Error())
+		fmt.Println(err.Error())
 	}
 	router := gin.New()
 	router.Use(gin.Logger())
 	setupRoutes(router)
 
-	router.Run(os.Getenv("PORT"))
+	port := os.Getenv("PORT")
+	fmt.Println(port, "Hello")
+	if port == "" {
+		port = "3000"
+	}
+
+	router.Run(":" + port)
 }
